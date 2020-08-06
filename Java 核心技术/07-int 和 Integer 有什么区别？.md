@@ -105,13 +105,12 @@
 
 2.  建议使用 guava 的计算函数，带有溢出处理的判断。（[Guava wiki/MathExplained#checked-arithmetic](https://github.com/google/guava/wiki/MathExplained#checked-arithmetic)）
 
-    >   IntMath.checkedAdd
-    >   IntMath.checkedSubtract
-    >   IntMath.checkedMultiply
-    >   IntMath.checkedPow
-    >
-    >   LongMath.checkedAdd
-    >   LongMath.checkedSubtract
-    >   LongMath.checkedMultiply
-    >   LongMath.checkedPow
+    -	IntMath.checkedAdd
+    -	IntMath.checkedSubtract
+    -	IntMath.checkedMultiply
+    -	IntMath.checkedPow
+    -	LongMath.checkedAdd
+    -	LongMath.checkedSubtract
+    -	LongMath.checkedMultiply
+    -	LongMath.checkedPow
 
