@@ -56,3 +56,120 @@
 
 ### 扩展
 
+#### 集合框架
+
+1.  Java 集合框架图
+
+    -   ![img](imgs/675536edf1563b11ab7ead0def1215c7.png)
+
+2.  三大类集合
+
+    -   List，有序集合
+
+    -   Set，不允许重复元素
+
+        >   TreeSet，支持自然顺序访问
+        >
+        >   HashSet，利用哈希算法
+        >
+        >   LinkedHashSet，内部构建了一个记录插入顺序的双向链表，
+
+    -   Queue/Deque，标准队列结构的实现
+
+3.  今天介绍的这些集合类，**都不是线程安全的**。但，可以通过 java.util.concurrent 实现线程安全。
+
+    -   ```java
+        // synchronized 方法
+        static List synchronizedList(List list)
+            
+        // 使用示例
+        List list = Collections.synchronizedList(new ArrayList());
+        ```
+
+### 分享
+
+1.  使用时必须注意**是否需要线程安全**的场合
+
+    -   有并发读写的代码里，必须使用 Vertor，或其他线程安全的集合结构。
+    -   没有并发写的代码里，则使用 ArrayList、LinkedList，性能更优。
+
+2.  测试代码：
+
+    -   ```java
+        
+        public class ListTest {
+            static List<Integer> list = new ArrayList<Integer>(1000);
+            static CountDownLatch latch = null;
+        
+            public static void main(String[] args) throws InterruptedException {
+                System.out.println("begin");
+        
+                int size = 2;
+                latch = new CountDownLatch(size);
+        
+                for (int i = 0; i < size; i++) {
+                    new LTest().start();
+                }
+        
+                latch.await();
+                System.out.println("finish, list.size: " + list.size());
+                System.out.println("list: " + list);
+            }
+        }
+        
+        
+        class LTest extends Thread {
+            static AtomicInteger at = new AtomicInteger();
+        
+            public void run() {
+                List<Integer> list = ListTest.list;
+        
+                try {
+                    while(at.get() < 1000) {
+                        list.add(at.get());
+                        int value = at.incrementAndGet();
+        
+                        if (value % 100 == 0) {
+                            System.out.println(value);
+                        }
+                        if (value - 1 >= 0) {
+                            list.get(value - 1);
+                        }
+                        if (value - 2 >= 0) {
+                            list.get(value - 2);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+        
+                System.out.println(list.size());
+                ListTest.latch.countDown();
+        
+            }
+        }
+        ```
+
+3.  运行后，输出结果如下：
+
+    -   ```bash
+        begin
+        java.lang.IndexOutOfBoundsException: Index: 46, Size: 47
+        	at java.util.ArrayList.rangeCheck(ArrayList.java:657)
+        	at java.util.ArrayList.get(ArrayList.java:433)
+        	at com.playcrab.LTest.run(ListTest.java:45)
+        47
+        java.lang.IndexOutOfBoundsException: Index: 47, Size: 47
+        	at java.util.ArrayList.rangeCheck(ArrayList.java:657)
+        	at java.util.ArrayList.get(ArrayList.java:433)
+        47
+        	at com.playcrab.LTest.run(ListTest.java:45)
+        finish, list.size: 47
+        list: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 31, 32, 33, 35, 35, 37, 37, 39, 39, 41, 41, 43, 43, 45, 47]
+        
+        ```
+
+4.  小结
+
+    -   并发读写时，有数据越界、位置错乱的问题。
+    -   注意线程安全事项，否则可能数据错乱引起 BUG。
