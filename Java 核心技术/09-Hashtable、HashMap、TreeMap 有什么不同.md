@@ -260,3 +260,7 @@
 
 #### 容量、负载因子和树化
 
+### 总结
+
+1.  在多线程并发读写的场景，应该使用 ConcurrentHashMap。如果用 HashMap 有可能出现**死循环**，以及**重复 key** 的问题。
+2.  在需要有序的环境里，可以使用 TreeMap。如需线程安全，则可以使用 **Collection.synchronizedMap(new TreeMap<>())**
