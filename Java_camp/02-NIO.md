@@ -16,7 +16,7 @@
 
 		> sb -u http://localhost:8001/ -c 40 -N 30
 
-	- linux: Apache ab
+	- linux: Apache ab / wrk
 
 5.　BIO: Java HTTP 服务器
 
@@ -76,4 +76,184 @@
 8.　异步 I/O 模型
 
 	1.　Proactor 模式
+
+### Netty 概览
+
+1.　定义
+	1.　异步
+	2.　事件驱动
+	3.　NIO
+2.　适用于
+	1.　服务器
+	2.　客户端
+	3.　TCP/UDP
+3.　特性
+	1.　高性能协议服务器
+		1.　高吞吐
+		2.　低延迟
+		3.　低开销
+		4.　零拷贝
+		5.　可扩容
+	2.　松耦合：网络和业务逻辑分离
+	3.　使用方便、可维护性好
+4.　应用
+	1.　HTTP Server
+	2.　HTTPS Server
+	3.　WebSocket Server
+	4.　TCP Server
+	5.　UDP Server
+	6.　In VM Pipe
+5.　基本概念
+	1.　Channel
+	2.　ChannelFuture
+	3.　Event & Handler
+	4.　Encoder & Decoder
+	5.　ChannelPipeline
+6.　Event & Handler
+	1.　入站事件
+	2.　出站事件
+
+### Netty 原理
+
+1. 高性能？
+
+	1. 高并发用户
+		1. QPS
+		2. 业务指标
+	2. 高吞吐量
+		1. TPS
+		2. 技术指标
+	3. 低延迟
+		1. 技术指标
+
+2. 高性能的另一方面
+
+	1. 系统复杂度　×10　以上
+	2. 建设与维护成本　＋＋＋
+	3. 故障或　BUG 导致的破坏性　×10　以上
+
+3. 稳定性建议（混沌工程）
+
+	1. 容量/现状 （自省、自知）
+
+		> 86400s/day 
+		>
+		> 淘宝 TPS 3000W / 86400 ~~ 300/s
+		>
+		> 高并发业务：活动、秒杀
+
+	2. 爆炸半径
+
+	3. 工程方面积累与改进
+
+4. Netty 运行原理
+
+5. 关键对象
+
+	1. Bootstrap
+	2. EventLoopGroup
+	3. EventLoop
+	4. SocketChannel ：连接
+	5. ChannelInitializer
+	6. ChannelPipline
+	7. ChannelHandler
+
+6. ChannelPipline
+
+	1. inbound
+	2. outbound
+
+7. Event & Handler
+
+	1. 入站事件
+		1. 通道激活和停用
+		2. 读操作事件
+		3. 异常事件
+		4. 用户事件
+	2. 出站事件
+		1. 打开连接
+		2. 关闭连接
+		3. 写入数据
+		4. 刷新数据
+
+### Netty 网络优化
+
+1. 粘包与拆包（tcp 上层）
+
+	1.　ByteToMessageDecoder 一些常见的实现类
+		1.　FixedLengthFrameDecoder
+
+2.　Nagle　与　TCP_NODELAY
+
+	1.　MTU，最大传输单元，1500 Byte
+	2.　MSS，最大分段大小，1460 Byte
+	3.　Nagle 算法优化
+		1.　优化条件
+			- 缓冲区满
+			- 达到超时
+
+3.　连接优化
+
+	1.　TIME_WAIT 2MSL
+		1.　降低时间
+		2.　端口复用
+
+4.　Netty 优化
+
+	1.　不要阻塞　EventLoop
+
+	2.　系统参数优化
+
+		- fd 文件描述符限制
+
+		- TIME_WAIT 2MSL
+
+			> Linux ulimit -a /proc/sys/net/ipv4/tcp_fin_timeout
+			>
+			> Windows TcpTimeWaitDelay
+
+	3.　缓冲区优化
+
+		1.　SO_RCVBUF　接收缓冲
+		2.　SO_SNDBUF　发送缓冲
+		3.　SO_BACKLOG 保持连接状态
+		4.　REUSEXXX
+
+	4.　心跳周期优化
+
+		1.　心跳机制与断线重连
+
+	5.　内存与　ByteBuffer 优化
+
+		1.　DirectBuffer 与　HeapBuffer
+
+	6.　其他优化
+
+		1.　ioRatio
+		2.　Watermark
+		3.　TrafficShaping
+
+	### API 网关
+
+	1. 职能
+		1. 请求接入，所有 API　接口服务请求的接入点。
+		2. 业务聚合，作为所有后端业务服务的聚合点
+		3. 中介策略，实现安全、验证、路由、过滤、流控等策略
+		4. 统一管理，对所有 API 服务和策略进行统一管理
+	2. 分类
+		1. 流量网关
+			1. 关注稳定与安全
+				1. 流控
+				2. 日志
+				3. 防SQL 注入
+				4. 防 WEb 攻击
+				5. 屏蔽工具
+				6. 黑白 IP 名单
+				7. 证书/加解密处理
+		2. 业务网关
+			1. 提供更好的服务
+				1. 服务级别流控
+				2. 服务降级与熔断
+				3. 路由、LB、灰度
+				4. ……
 
