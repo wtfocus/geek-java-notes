@@ -1,3 +1,5 @@
+
+
 public class Hello {
     public static void main(String[] args) {
         byte n1 = 1;
@@ -5,7 +7,7 @@ public class Hello {
         long n3 = 3L;
         double n4 = 4.0D;
 
-        if (n2 < n3) {
+        if (2 < n3) {
             System.out.println("n2 + n3 = " + n2 + n3);
         }
 
