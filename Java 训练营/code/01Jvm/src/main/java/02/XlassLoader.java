@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -7,7 +8,7 @@ import java.lang.reflect.Method;
 public class XlassLoader extends ClassLoader{
     public static void main(String[] args) throws Exception {
         String className = "Hello";
-        String methodName = "main";
+        String methodName = "hello";
 
         ClassLoader classLoader = new XlassLoader();
 
@@ -31,15 +32,21 @@ public class XlassLoader extends ClassLoader{
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(name + suffix);
 
         try {
-            if (inputStream != null) {
-
-                int length = inputStream.available();
-                byte[] byteArray = new byte[length];
-                inputStream.read(byteArray);
-
-                byte[] classBytes = decode(byteArray);
-                defineClass(name, classBytes, 0, classBytes.length);
+            if (inputStream == null) {
+                throw new IOException(name + suffix + " is not found.");
             }
+
+            int length = inputStream.available();
+            byte[] byteArray = new byte[length];
+            inputStream.read(byteArray);
+
+            byte[] classBytes = decode(byteArray);
+            defineClass(name, classBytes, 0, classBytes.length);
+
+            FileOutputStream fileOutputStream = new FileOutputStream("Hello.class");
+            System.out.println("write file.");
+            fileOutputStream.write(classBytes);
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
