@@ -15,7 +15,6 @@ public class XlassLoader extends ClassLoader{
         Class<?> clazz = classLoader.loadClass(className);
 
         for (Method m: clazz.getDeclaredMethods()) {
-            System.out.println(m);
             System.out.println(clazz.getSimpleName() + "." + m.getName());
         }
 
@@ -32,9 +31,6 @@ public class XlassLoader extends ClassLoader{
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(name + suffix);
 
         try {
-            if (inputStream == null) {
-                throw new IOException(name + suffix + " is not found.");
-            }
 
             int length = inputStream.available();
             byte[] byteArray = new byte[length];

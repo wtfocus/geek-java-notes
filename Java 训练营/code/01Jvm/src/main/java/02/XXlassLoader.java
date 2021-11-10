@@ -14,7 +14,7 @@ public class XXlassLoader extends ClassLoader {
         final String className = "Hello";
         final String methodName = "hello";
         // 创建类加载器
-        ClassLoader classLoader = new XlassLoader();
+        ClassLoader classLoader = new XXlassLoader();
         // 加载相应的类
         Class<?> clazz = classLoader.loadClass(className);
         // 看看里面有些什么方法
