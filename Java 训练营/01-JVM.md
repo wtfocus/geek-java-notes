@@ -1,6 +1,8 @@
 [toc]
 
-## JVM
+# JVM 核心技术
+
+## 基础知识
 
 ### Java 概览
 
@@ -187,63 +189,149 @@
 
 	- JavaAgent 参数
 
-1.　
+## 工具与 GC 策略
+
+### JDK 内置命令行工具
+
+1. java
+2. javac，编译
+3. javap，反编译
+4. javadoc，自动生成相关 API 文档
+5. javah，java -> .h 文件
+6. extcheck，检查 jar 版本冲突，使用较少
+7. jdb，Java Debugger
+8. jdeps，探测 class / jar 依赖
+9. jar，打包工具
+10. keytool，安全证书/密钥管理
+11. jarsigner，jar 签名，验证
 
 ### JVM 命令行工具
 
-1. jps -lmv
+1. jps -lmv / jinfo {pid}，查看 java 进程
 
-2. jinfo {pid}
+	> 不同用户/不同 jdk 版本，可能会查不到。
 
-3. jstat -gc 91739 1000 1000
+2. jstat，查 GC 
 
-4. jstat -gcutil 91739 1000 1000 （百分比）
+  > 动态打印
+  >
+  > 
+  >
+  > 常用参数
+  >
+  > jstat -gc 91739 1000 1000 	（显示：字节数）
+  > jstat -gcutil 91739 1000 1000 （显示：百分比）
+  >
+  > 
 
-5. jmap -histo 91739
+3. jmap，查看 heap 或类占用空间统计
 
-6. jstack -l 91739　线程信息
+	> 打印当前堆内存快照
+	>
+	> 
+	>
+	> -heap 堆内存配置和使用
+	>
+	> -histo 不同类占用空间多少，直方图
+	>
+	> -dump Dump 堆内存
+	>
+	> 
+	>
+	> 注：mac 环境下会有 bug，jdk9/10 以上版本修复
 
-7. jcmd
+4. jstack，查看线程信息
 
-	> (env) wangtaodeMac-mini:code wangtao$ jcmd 91739 help
-	> 91739:
-	> The following commands are available:
-	> JFR.stop
-	> JFR.start
-	> JFR.dump
-	> JFR.check
-	> VM.native_memory
-	> VM.check_commercial_features
-	> VM.unlock_commercial_features
-	> ManagementAgent.stop
-	> ManagementAgent.start_local
-	> ManagementAgent.start
-	> VM.classloader_stats
-	> GC.rotate_log
-	> Thread.print
-	> GC.class_stats
-	> GC.class_histogram
-	> GC.heap_dump
-	> GC.finalizer_info
-	> GC.heap_info
-	> GC.run_finalization
-	> GC.run
-	> VM.uptime
-	> VM.dynlibs
-	> VM.flags
-	> VM.system_properties
-	> VM.command_line
-	> VM.version
-	> help
+	> -l 长列表模式，打印线程锁信息（常用）
+	>
+	> -F　
+	>
+	> -m
+	>
+	> 
+	>
+	> kill -3 同样效果
 
-### 图形化工具
+5. jcmd，执行 JVM 相关分析命令（整合）
 
-1.　jconsole
-2.　jvisualvm
-3.　VisualGC
-4.　jmc
+  > (env) wangtaodeMac-mini:code wangtao$ jcmd 91739 help
+  > 91739:
+  > The following commands are available:
+  > JFR.stop
+  > JFR.start
+  > JFR.dump
+  > JFR.check
+  > VM.native_memory
+  > VM.check_commercial_features
+  > VM.unlock_commercial_features
+  > ManagementAgent.stop
+  > ManagementAgent.start_local
+  > ManagementAgent.start
+  > VM.classloader_stats
+  > GC.rotate_log
+  > Thread.print
+  > GC.class_stats
+  > GC.class_histogram
+  > GC.heap_dump
+  > GC.finalizer_info
+  > GC.heap_info
+  > GC.run_finalization
+  > GC.run
+  > VM.uptime
+  > VM.dynlibs
+  > VM.flags
+  > VM.system_properties
+  > VM.command_line
+  > VM.version
+  > help
 
-### GC 背景＆原理
+6. jrunscript/jjs，运行 js 命令
+
+###  JDK 相关图形化工具
+
+1. jconsole
+
+	> jdk 早期较常用
+
+2. jvisualvm
+
+	> 较大版本，默认 jdk 没有包含此工具
+	>
+	> 功能强大、较多
+	>
+	> 
+	>
+	> 线程展示比 jconsole 更可视化
+	>
+	> sampler，堆抽样
+	>
+	> profiler
+	>
+	> 
+	>
+	> 其他类似，较为方便的一个工具 -- VisualGC，eclipace/idea 插件安装，使用
+
+3. jmc
+
+	> 官方工具中最强大的。 **推荐**熟练使用。
+	>
+	> JMC 从 2020.07后，不再打包到默认 jdk 中。需要手工下载安装。
+	>
+	> JMC 版本需要对应当前系统版本，否则会有卡死情况。
+	>
+	> 
+	>
+	> Java 飞行记录器：
+	>
+	> 记录一个时间段内状态变化情况。
+	>
+	> 并且，对原始数据进行了加工、分析、展示
+
+### 扩展
+
+1. jenv，支持多个 jdk 环境
+
+## GC 的背景和一般原理
 
 1. Y-gen
 	- Eden/S0/S1 = 8/1/1
