@@ -335,3 +335,327 @@
 
 1. Y-gen
 	- Eden/S0/S1 = 8/1/1
+
+## 调优分析
+
+### GC 日志分析和解读
+
+1. 打印 GC 参数
+
+	> -XX:+PrintGCDetails，打印 GC 信息，-XX:+PrintGC 概要信息
+	>
+	> -XX:+PrintGCDateStamps 打印 GC 时间戳
+	>
+	> -Xloggc:{GC LOG} 指定 GC 日志名
+	>
+	> 
+	>
+	> java 默认参数
+
+	> -Xmx 内存大于 1G 时，1/4 内存；小于 1G 时，1/2 内存。
+	>
+	> -Xmx == -Xms 推荐
+
+2. GC 日志分析
+
+3. Java8 默认 GC 策略/ -XX:+UseParallelGC 并行 GC
+
+	> PSYoungGen
+	>
+	> ParOldGen:
+	>
+	> 2021-11-13T11:51:19.371-0800: [GC (Allocation Failure) [PSYoungGen: 65407K->10734K(76288K)] 65407K->19061K(251392K), 0.0069045 secs] [Times: user=0.01 sys=0.02, real=0.00 secs] 
+	>
+	> 
+	>
+	> 分类
+	>
+	> {时间}: [{堆内存变量情况/GC 情况}] [{ CPU 使用情况}]
+	>
+	> {堆内存变量情况/GC 情况}　==> {GC 原因}，{GC 并行执行使用时间/GC 暂停时间}
+	>
+	> 
+	>
+	> 该垃圾回收器默认启动了 AdaptiveSizePolicy 自适应大小策略。
+	>
+	> -XX:+UseAdaptiveSizePolicy
+	>
+	> 参考：https://segmentfault.com/a/1190000016427465
+
+4. Young GC / Full GC（yong gc + old gc）
+
+	- Minor GC / Major GC
+
+5. -XX:+UseSerialGC 串行 GC
+
+	> DefNew
+	>
+	> Tenured 老年代
+	>
+	> 2021-11-13T12:15:42.396-0800: [GC (Allocation Failure) 2021-11-13T12:15:42.396-0800: [DefNew: 69499K->8704K(78656K), 0.0138857 secs] 69499K->22558K(253440K), 0.0139177 secs] [Times: user=0.01 sys=0.01, real=0.02 secs] 
+
+6. -XX:+UseConcMarkSweepGC， CMS
+
+	> 清理 OLD 区
+	>
+	> ParNew
+	>
+	> 2021-11-13T13:52:51.681-0800: [GC (Allocation Failure) 2021-11-13T13:52:51.681-0800: [ParNew: 279616K->34943K(314560K), 0.0360799 secs] 279616K->91983K(1013632K), 0.0361222 secs] [Times: user=0.05 sys=0.07, real=0.03 secs] 
+	>
+	> ......
+	>
+	> 2021-11-13T13:52:52.093-0800: [GC (CMS Initial Mark) [1 CMS-initial-mark: 379704K(699072K)] 421274K(1013632K), 0.0004674 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+
+7. -XX:+UseG1GC，G1 GC
+
+8. GC 相关工具
+
+	> GCEasy，在线
+	>
+	> GCViewer，jar
+
+### JVM 线程堆栈数据分析
+
+1. JVM 线程模型示意图
+
+	- ![image-20211113141329373](imgs/image-20211113141329373.png)
+
+2. JVM 内部线程
+
+	- VM 线程
+	- 定时任务线程
+	- GC 线程
+	- 编译器线程
+	- 信号分发线程
+	- 其他：{业务线程}
+
+3. 安全点
+
+	1. 方法代码中被值入的安全点检测入口。
+	2. 线程处于安全点状态：线程暂停执行，这个时候线程栈不再发生改变。
+	3. JVM 的安全点状态：所有线程处于安全点状态。
+
+4. JVM 线程转储：
+
+	1. JDK 工具：
+
+		> jstack
+		>
+		> jcmd
+		>
+		> jconsole
+		>
+		> jvisualvm
+		>
+		> ...
+
+	2. SHELL
+
+		> kill -3
+		>
+		> win, Ctrl+Break
+
+	3. JMX
+
+		> ThreadMxBean
+
+5. 线程查看工具
+
+	> fastthread，在线
+
+### 内存分析与相关工具
+
+1. JVM 中 Java 对象结构
+
+	- ![image-20211113143023944](imgs/image-20211113143023944.png)
+
+2. 计算JVM 对象占用的内存大小
+
+	> Instrumentation.getObjectSize()
+	>
+	> JOL(Java Object Layout)
+	>
+	> jmap -histo/jcmd --> heap info
+
+3. 对象头和对象引用
+
+	> 64 位，12-byte(=96bit=64+32)，以 8 个字节对齐。所以，一个空类的实例至少占用 16字节。
+	>
+	> 32 位，对象头 8 个字节，以 4 的倍数对齐（32＝4×8）
+	>
+	> 即使 new 出很多简单对象，也会占用不少空间。
+	>
+	> JVM 默认开启指针压缩
+	>
+	> 32 位，一个引用占4 个字节。64 位，一般多消耗堆内存。
+
+4. 包装类型
+
+	> 比原生数据类型消耗内存更多。
+	>
+	> Integer，占用 16 字节（头部 8＋4＝12，数据 4 字节），int 部分占用 4 字节。所以。Integer 比原生类型 int 要多消耗 300％的内存。
+	>
+	> Long，占用 24 字节（头部8＋4＋数据 8＝20字节，再对齐）。Long 类型比起原生的 long 多占用 8 个字节。也就是多消耗 200％。
+
+5. 多维数组
+
+	> 二维数据`int[dim1][dim2]`中，每个嵌套的数组`int[dim2]`都是一个单独的 Object，会额外占用 16个字节的空间。当维度更大时，这种开销更加明显。
+	>
+	> 建议，尽量少用。
+	>
+	> 如必须要用的话，用一维数组模拟。
+
+6. String
+
+	> String 24 个字节的额外开销。
+
+7. 对齐
+
+8. OOM
+
+  -  OutOfMemoryError: Java heap space 
+
+  	>原因
+  >
+  	>创建新的对象时，堆内存中的空间不足以存放新创建的对象。
+  	>
+    >解决方案
+  >
+  	>增加堆内存大小，
+
+  -  OutOfMemoryError: PermGen space/ OutOfMemoryError: Metaspace 
+
+  	> 加载到内存中的类数理太多或体积太大
+  	>
+  	> 增大　PermGen/Metaspace
+  	>
+  	> -XX:MaxPermSize
+  	>
+  	> -XX:MaxMetaspaceSize
+  	>
+  	> 
+  	>
+  	> 高版本 JVM 也可以（不一定好用）
+  	>
+  	> -XX:+CMSClassUnloadingEnabled
+
+  -  OutOfMemoryError: Unable to create new native thread
+
+  	> 程序创建的线程数量已经达到上限值。
+  	>
+  	> 1. 调用系统参数 ulimit -a, echo 120000 > /proc/sys/kernel/threads-max
+  	> 2. 降低 Xss 参数
+  	> 3. 调整代码，改变线程创建和使用方式。
+
+9. 内存 Dump 分析工具
+
+	1. Eclipse MAT
+	2. jhat
+
+### JVM 调优分析经验
+
+1. 分配速率
+
+	> 定义：年轻代创建新对象
+	>
+	> 
+	>
+	> 计算：上次 GC 后，与下次 GC 开始前的年轻代使用量，两者的差值除以时间，就是分配速率。
+	>
+	> 
+	>
+	> 三个状态
+	>
+	> 正常：分配速率 ~ 回收速率
+	>
+	> OOM: 分配速率> 回收速率
+	>
+	> 亚健康：分配速率很高 ~ 回收速率
+	>
+	> 
+	>
+	> 影响 -- "蓄水池效应"
+	>
+	> 影响 Young GC/Minor GC 的次数和时间，进而影响吞吐量。
+	>
+	> 
+	>
+	> 思路
+	>
+	> 降低 GC 暂停频率
+	>
+	> 
+	>
+	> 方法
+	>
+	> 增大 Young 区大小。Eden = Young * 80％，Young = head * 1/3
+	>
+	> 修改 Young / Old 区比例；
+	>
+	> 增大 Xmx；
+	>
+	> 
+
+2. 晋升速率/提升速率
+
+	> 年轻代->老年代
+	>
+	> 定义
+	>
+	> 单位时间内，从年轻代提升到老年代的数据量。
+	>
+	> 过早提升
+	>
+	> 对象存活时间还不够长的时候，就被提升到了老年代。
+	>
+	> 现象
+	>
+	> 1. 短时间内频繁 Full GC
+	> 2. 每次 Full GC 后，老年代的使用率很低，在 10~20 %或以下
+	> 3. 提升速率接近于分配速率
+	>
+	> 思路
+	>
+	> 1. 增加年轻代的大小
+	> 2. 减少每次业务处理使用的内存数量
+	>
+	> 
+
+###GC 疑难情况问题分析
+
+1. Arthas 分析工具
+
+2. JVM 问题分析解决
+
+	1. 业务日志
+
+	2. 系统资源/监控信息
+
+	3. 性能指标
+
+	4. 系统日志
+
+	5. APM 应用性能监控
+
+	6. 排查应用系统
+
+		> 配置文件（重要，成本小/提升大/效果明显）
+		>
+		> GC 问题
+		>
+		> 线程
+		>
+		> 代码
+		>
+		> 单元测试
+
+	7. 排除资源竞争、坏邻居效应
+
+3. 案例分析
+
+	> -XX:+UseG1GC 
+	>
+	> -XX:MaxGCPauseMillis=50，GC  暂停时间 50ms
+	>
+	> -XX:ParallelGCThreads=4，固定 GC 线程数 4
+
