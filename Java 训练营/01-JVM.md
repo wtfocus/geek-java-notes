@@ -358,29 +358,39 @@
 
 2. GC 日志分析
 
-3. Java8 默认 GC 策略/ -XX:+UseParallelGC 并行 GC
+3. -XX:+UseParallelGC 并行 GC（Java8 默认 GC 策略）
 
-	> PSYoungGen
-	>
-	> ParOldGen:
-	>
-	> 2021-11-13T11:51:19.371-0800: [GC (Allocation Failure) [PSYoungGen: 65407K->10734K(76288K)] 65407K->19061K(251392K), 0.0069045 secs] [Times: user=0.01 sys=0.02, real=0.00 secs] 
-	>
-	> 
-	>
-	> 分类
-	>
-	> {时间}: [{堆内存变量情况/GC 情况}] [{ CPU 使用情况}]
-	>
-	> {堆内存变量情况/GC 情况}　==> {GC 原因}，{GC 并行执行使用时间/GC 暂停时间}
-	>
-	> 
-	>
-	> 该垃圾回收器默认启动了 AdaptiveSizePolicy 自适应大小策略。
-	>
-	> -XX:+UseAdaptiveSizePolicy
-	>
-	> 参考：https://segmentfault.com/a/1190000016427465
+  > 新生代 GC 日志
+  >
+  > 2021-11-15T21:23:37.032-0800: 0.224: [GC (Allocation Failure) [PSYoungGen: 262144K->43509K(305664K)] 262144K->82306K(1005056K), 0.1025653 secs] [Times: user=0.03 sys=0.05, real=0.10 secs] 
+  >
+  > 
+  >
+  > PSYoungGen -- Young GC
+  >
+  > 
+  >
+  > 老年代 GC 日志
+  >
+  > 2021-11-15T21:23:37.794-0800: 0.986: [Full GC (Ergonomics) [PSYoungGen: 38366K->0K(232960K)] [ParOldGen: 609474K->321147K(699392K)] 647841K->321147K(932352K), [Metaspace: 2717K->2717K(1056768K)], 0.0522962 secs] [Times: user=0.21 sys=0.01, real=0.05 secs]
+  >
+  > Full GC (Ergonomics) -- Full GC
+  >
+  > 
+  >
+  > 分类
+  >
+  > {时间}: [{堆内存变量情况/GC 情况}] [{ CPU 使用情况}]
+  >
+  > {堆内存变量情况/GC 情况}　==> {GC 原因}，{GC 并行执行使用时间/GC 暂停时间}
+  >
+  > 
+  >
+  > 该垃圾回收器默认启动了 AdaptiveSizePolicy 自适应大小策略。
+  >
+  > -XX:+UseAdaptiveSizePolicy
+  >
+  > 参考：https://segmentfault.com/a/1190000016427465
 
 4. Young GC / Full GC（yong gc + old gc）
 
@@ -388,11 +398,42 @@
 
 5. -XX:+UseSerialGC 串行 GC
 
-	> DefNew
-	>
-	> Tenured 老年代
-	>
-	> 2021-11-13T12:15:42.396-0800: [GC (Allocation Failure) 2021-11-13T12:15:42.396-0800: [DefNew: 69499K->8704K(78656K), 0.0138857 secs] 69499K->22558K(253440K), 0.0139177 secs] [Times: user=0.01 sys=0.01, real=0.02 secs] 
+  - java 命令 / JVM 参数
+
+      > java -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+UseSerialGC -Xmx1g -Xms1g GCLogAnalysis
+
+  - GC 日志分析
+      > 新生代 GC 日志
+      >
+      > 2021-11-15T20:07:34.971-0800: [GC (Allocation Failure) 2021-11-15T20:07:34.971-0800: [DefNew: 279616K->34944K(314560K), 0.0460931 secs] 279616K->88994K(1013632K), 0.0461259 secs] [Times: user=0.03 sys=0.02, real=0.04 secs] 
+      >
+      > 
+      >
+      > 2021-11-13T12:15:42.396-0800 -- GC 时间戳
+      >
+      > GC (Allocation Failure) -- GC 原因
+      >
+      > DefNew -- Young GC
+      >
+      > 279616K->34944K(314560K),0.0460931 secs -- GC 前 Young 区大小->GC 后 Young 区大小（Young 区总大小）,GC 耗时
+      >
+      > 279616K->88994K(1013632K), 0.0461259 secs -- GC 前 Heap 大小->GC 后 Heap 大小（Heap 总大小），GC 耗时
+      >
+      > [Times: user=0.03 sys=0.02, real=0.04 secs] -- CPU 使用情况
+      >
+      > 
+      >
+      > 老年代 GC 日志
+      >
+      > 2021-11-15T20:07:35.623-0800: [GC (Allocation Failure) 2021-11-15T20:07:35.623-0800: [DefNew: 314559K->314559K(314560K), 0.0000139 secs]2021-11-15T20:07:35.623-0800: [Tenured: 620889K->384120K(699072K), 0.0523686 secs] 935449K->384120K(1013632K), [Metaspace: 2717K->2717K(1056768K)], 0.0524175 secs] [Times: user=0.05 sys=0.00, real=0.05 secs] 
+      >
+      > 
+      >
+      > Tenured -- Old GC
+      >
+      > 620889K->384120K(699072K), 0.0523686 secs -- GC 前 Old 区大小->GC 后 Old 区大小（Old 区总大小）,GC 耗时
+      >
+      > 
 
 6. -XX:+UseConcMarkSweepGC， CMS
 
