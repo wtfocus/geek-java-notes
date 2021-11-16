@@ -452,20 +452,54 @@
       >
       > 老年代 GC 日志
       >
+      > 
+      >
+      > // 第一步，初始标记，会导致 stw
+      >
       > 2021-11-15T22:48:11.920-0800: 0.674: [GC (CMS Initial Mark) [1 CMS-initial-mark: 368207K(699072K)] 408857K(1013632K), 0.0001623 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+      >
+      > 
+      >
+      > // 第二步，并发标记，与用户线程同时运行；
+      >
       > 2021-11-15T22:48:11.920-0800: 0.674: [CMS-concurrent-mark-start]
       > 2021-11-15T22:48:11.923-0800: 0.677: [CMS-concurrent-mark: 0.003/0.003 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+      >
+      > 
+      >
+      > // 第三步，预清理，与用户线程同时运行；
+      >
       > 2021-11-15T22:48:11.923-0800: 0.677: [CMS-concurrent-preclean-start]
       > 2021-11-15T22:48:11.924-0800: 0.678: [CMS-concurrent-preclean: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+      >
+      > 
+      >
+      > // 第四步，可被终止的预清理，与用户线程同时运行；
+      >
       > 2021-11-15T22:48:11.924-0800: 0.679: [CMS-concurrent-abortable-preclean-start]
       > 2021-11-15T22:48:11.958-0800: 0.713: [GC (Allocation Failure) 2021-11-15T22:48:11.958-0800: 0.713: [ParNew: 314558K->34944K(314560K), 0.0458561 secs] 682766K->477631K(1013632K), 0.0458898 secs] [Times: user=0.20 sys=0.03, real=0.05 secs] 
       > 2021-11-15T22:48:12.040-0800: 0.794: [GC (Allocation Failure) 2021-11-15T22:48:12.040-0800: 0.794: [ParNew: 314560K->34943K(314560K), 0.0405678 secs] 757247K->550159K(1013632K), 0.0406022 secs] [Times: user=0.19 sys=0.02, real=0.04 secs] 
       > 2021-11-15T22:48:12.110-0800: 0.864: [GC (Allocation Failure) 2021-11-15T22:48:12.110-0800: 0.864: [ParNew: 314559K->34944K(314560K), 0.0531434 secs] 829775K->631728K(1013632K), 0.0531785 secs] [Times: user=0.22 sys=0.03, real=0.05 secs] 
       > 2021-11-15T22:48:12.199-0800: 0.954: [GC (Allocation Failure) 2021-11-15T22:48:12.199-0800: 0.954: [ParNew: 314560K->34944K(314560K), 0.0490043 secs] 911344K->715426K(1013632K), 0.0490591 secs] [Times: user=0.21 sys=0.02, real=0.05 secs] 
       > 2021-11-15T22:48:12.249-0800: 1.003: [CMS-concurrent-abortable-preclean: 0.008/0.324 secs] [Times: user=0.96 sys=0.10, real=0.32 secs] 
+      >
+      > 
+      >
+      > // 第五步，重新标记，会导致 stw
+      >
       > 2021-11-15T22:48:12.249-0800: 1.003: [GC (CMS Final Remark) [YG occupancy: 35088 K (314560 K)]2021-11-15T22:48:12.249-0800: 1.003: [Rescan (parallel) , 0.0003421 secs]2021-11-15T22:48:12.249-0800: 1.003: [weak refs processing, 0.0000198 secs]2021-11-15T22:48:12.249-0800: 1.003: [class unloading, 0.0002390 secs]2021-11-15T22:48:12.249-0800: 1.004: [scrub symbol table, 0.0002569 secs]2021-11-15T22:48:12.250-0800: 1.004: [scrub string table, 0.0001381 secs][1 CMS-remark: 680482K(699072K)] 715570K(1013632K), 0.0010442 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+      >
+      > 
+      >
+      > // 第六步，并发清理，与用户线程同时运行；
+      >
       > 2021-11-15T22:48:12.250-0800: 1.004: [CMS-concurrent-sweep-start]
       > 2021-11-15T22:48:12.251-0800: 1.005: [CMS-concurrent-sweep: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+      >
+      > 
+      >
+      > // 第七步，并发重置，与用户线程同时运行；
+      >
       > 2021-11-15T22:48:12.251-0800: 1.005: [CMS-concurrent-reset-start]
       > 2021-11-15T22:48:12.254-0800: 1.008: [CMS-concurrent-reset: 0.003/0.003 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
 
