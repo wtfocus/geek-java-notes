@@ -336,6 +336,59 @@
 1. Y-gen
 	- Eden/S0/S1 = 8/1/1
 
+## 串行 GC / 并行 GC
+
+## CMS GC / G1 GC
+
+### CMS GC
+
+1. -XX:+UseConcMarkSweepGC
+
+2. 算法
+
+	- 对年轻代采用　并行 STW 方式的 mark-copy（标记－复制）算法
+	- 对老年代采用　并发 mark-sweep （标记－清除）算法
+
+3. 设计目标
+
+	- 避免老年代垃圾收集时出现长时间的卡顿。
+
+4. 为达“目标”，所采用的方法
+
+	1. 不对老年代进行整理，而使用空闲列表（free-lists）来管理内存空间的回收。
+
+	2. 在 mark-and-sweep （标记－清除）阶段的大部分工作和应用线程一起并发执行。
+
+		> 它会和业务线程争抢 CPU资源。
+		>
+		> 默认 CMS 使用 CPU 核心数的 1/4.
+
+5. CMS 六个阶段
+
+	1. Initial Mark 初始标记
+
+		> GC STW　
+		>
+		> 因为 stw，所以标记对象完全正确
+
+	2. concurrent-mark 并发标记
+
+		> 堆内存上标记的引用状态，不一定是正确的。
+
+	3. concurrent-preclean 并发预清理
+
+		> 应对引用状态改变的区域。Cark Making ==> “脏区”
+
+	4. Final Remark 最终标记
+
+		> GC STW
+
+	5. concurrent-sweep 并发清理
+
+	6. concurrent-reset 并发重置
+
+	
+
 ## 调优分析
 
 ### GC 日志分析和解读
