@@ -1,8 +1,6 @@
 [toc]
 
-# NIO
-
-## Java Socket 编程
+## NIO
 
 ### 服务器通信原理
 
@@ -52,7 +50,7 @@
 	1.　不仅面临线程/CPU 的问题
 	2.　还要面对数据来回复制的问题。（用户空间/内核空间）
 
-### 通信模型
+### IO 模型与相关概念
 
 1. 阻塞、非阻塞，是线程处理模式。
 
@@ -68,64 +66,77 @@
 
 4. 阻塞 I/O 模型
 
-	1.　BIO
+  1. BIO
 
-5.　非阻塞 I/O 模型
+      -   ![image-20211117224427714](imgs/image-20211117224427714.png)
 
-	1.　轮询查看数据是否准备好
-	2.　类 BIO
+      -   
 
-6.　I/O 复用模型
+5. 非阻塞 I/O 模型
 
-	1.　先阻塞在　select/poll/epoll 上，（内核轮询）
-	2.　再阻塞在 IO 操作上
-	3.　epoll !  
-	4.　Reactor 模式
+  1.　轮询查看数据是否准备好
+  2.　类 BIO
+      -   ![image-20211117224338516](imgs/image-20211117224338516.png)
 
-7.　信号驱动的 I/O 模型
+6. I/O 多路复用模型
 
-	1.　事件驱动模式
-	2.　线程池 -> EDA -> SEDA
+  1.　先阻塞在　select/poll/epoll 上，（内核轮询）
+  2.　再阻塞在 IO 操作上
+  3.　epoll !  ，可以看作 select/poll 的改进。
+  4.　Reactor 模式
+      -   ![image-20211117234207462](imgs/image-20211117234207462.png)
 
-8.　异步 I/O 模型
+7. 信号驱动的 I/O 模型
 
-	1.　Proactor 模式
+  1.　事件驱动模式
+      -   ![image-20211117234806340](imgs/image-20211117234806340.png)
+  2.　线程池 -> EDA -> SEDA
+      -   ![image-20211117234743676](imgs/image-20211117234743676.png)
+
+8. 异步 I/O 模型
+
+  1.　![image-20211117235011301](imgs/image-20211117235011301.png)
+  2.　Proactor 模式
+      -   ![image-20211117235528754](imgs/image-20211117235528754.png)
 
 ### Netty 概览
 
-1.　定义
-	1.　异步
-	2.　事件驱动
-	3.　NIO
-2.　适用于
-	1.　服务器
-	2.　客户端
-	3.　TCP/UDP
-3.　特性
-	1.　高性能协议服务器
-		1.　高吞吐
-		2.　低延迟
-		3.　低开销
-		4.　零拷贝
-		5.　可扩容
-	2.　松耦合：网络和业务逻辑分离
-	3.　使用方便、可维护性好
-4.　应用
-	1.　HTTP Server
-	2.　HTTPS Server
-	3.　WebSocket Server
-	4.　TCP Server
-	5.　UDP Server
-	6.　In VM Pipe
-5.　基本概念
-	1.　Channel
-	2.　ChannelFuture
-	3.　Event & Handler
-	4.　Encoder & Decoder
-	5.　ChannelPipeline
-6.　Event & Handler
-	1.　入站事件
-	2.　出站事件
+0. Netty 是一个 Java 的网络应用开发框架。
+1. 概览
+    -   ![image-20211118001035377](imgs/image-20211118001035377.png)
+2. 特点
+  1. 异步
+  2. 事件驱动
+  3. 基于 NIO
+3. 适用于
+  1. 服务器
+  2. 客户端
+  3. TCP/UDP/HTTP
+4. 特性
+  1.　高性能协议服务器
+  	1.　高吞吐
+  	2.　低延迟
+  	3.　低开销
+  	4.　零拷贝
+  	5.　可扩容
+  2.　松耦合：网络和业务逻辑分离
+  3.　使用方便、可维护性好
+5. 应用
+  1.　HTTP Server
+  2.　HTTPS Server
+  3.　WebSocket Server
+  4.　TCP Server
+  5.　UDP Server
+  6.　In VM Pipe
+6. 基本概念
+  1.　Channel
+  2.　ChannelFuture
+  3.　Event & Handler
+  4.　Encoder & Decoder
+  5.　ChannelPipeline
+7. Event & Handler
+  1.　入站事件
+  2.　出站事件
 
 ### Netty 原理
 
