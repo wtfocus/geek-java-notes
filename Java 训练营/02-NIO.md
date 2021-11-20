@@ -10,32 +10,81 @@
 
 2.  HTTP 服务器 01
 
-	- 流程
+  - 流程
 
-		> 1. 创建一个 ServerSocket
-		> 2. 绑定端口
-		> 3. 通过 accept 方法拿到 Socket，进行处理。
-		> 	- Content-Length 指定内容长度
-		> 4. 模拟输出
-		> 5. 关闭socket
+  	> 1. 创建一个 ServerSocket
+  	> 2. 绑定端口
+  	> 3. 通过 accept 方法拿到 Socket，进行处理。
+  	> 	- Content-Length 指定内容长度
+  	> 4. 模拟输出
+  	> 5. 关闭socket
 
-	-   idea 启动多进程时，添加　-Xmx512，设置最大堆内存。
+  -   idea 启动多进程时，添加　-Xmx512，设置最大堆内存。
 
-	-  压测工具
+  -   代码
 
-	  - windows/mac：sb (SuperBenchmarker)
+  	- 
 
-	  	> sb -u http://localhost:8001/ -c 40 -N 30
+  -  压测工具
 
-	  - linux: Apache ab / wrk
+    - windows/mac：sb (SuperBenchmarker)
+
+    	> sb -u http://localhost:8001/ -c 40 -N 30
+
+    - linux: Apache ab / wrk
+    
+  - 压测结果
+
+  	> wangtaodeMac-mini-2:02NIO wangtao$ wrk -c 40 -d 30s http://127.0.0.1:8001
+  	> Running 30s test @ http://127.0.0.1:8001
+  	>   2 threads and 40 connections
+  	>   Thread Stats   Avg      Stdev     Max   +/- Stdev
+  	>     Latency     6.44ms   78.32ms   1.91s    99.30%
+  	>     Req/Sec     1.41k     0.91k    3.81k    66.46%
+  	>   22689 requests in 30.09s, 4.20MB read
+  	>   Socket errors: connect 40, read 143671, write 41, timeout 0
+  	> Requests/sec:    753.92
+  	> Transfer/sec:    142.80KB
 
 3. HTTP 服务器 02
 
-	- 为每个客户端创建一个线程
+  - 为每个客户端创建一个线程
+
+  - 压测结果
+
+  	> wangtaodeMac-mini-2:02NIO wangtao$ curl http://127.0.0.1:8002
+  	> hello,nio01
+  	>
+  	> wangtaodeMac-mini-2:02NIO wangtao$ wrk -c 40 -d 30s http://127.0.0.1:8002
+  	> Running 30s test @ http://127.0.0.1:8002
+  	>   2 threads and 40 connections
+  	>   Thread Stats   Avg      Stdev     Max   +/- Stdev
+  	>     Latency     2.60ms    1.49ms  60.65ms   97.54%
+  	>     Req/Sec     0.92k   232.80     1.84k    76.72%
+  	>   54878 requests in 30.08s, 13.98MB read
+  	>   Socket errors: connect 0, read 442925, write 50, timeout 0
+  	> Requests/sec:   1824.64
+  	> Transfer/sec:    476.02KB
 
 4. HTTP 服务器 03
 
-	- 创建一个固定大小的线程池
+  - 创建一个固定大小的线程池
+
+  - 压测结果
+
+  	> wangtaodeMac-mini-2:02NIO wangtao$ curl http://127.0.0.1:8003
+  	> hello,nio03
+  	>
+  	> wangtaodeMac-mini-2:02NIO wangtao$ wrk -c 40 -d 30s http://127.0.0.1:8003
+  	> Running 30s test @ http://127.0.0.1:8003
+  	>   2 threads and 40 connections
+  	>   Thread Stats   Avg      Stdev     Max   +/- Stdev
+  	>     Latency     2.31ms   29.59ms 662.58ms   99.42%
+  	>     Req/Sec     2.14k     1.02k    6.88k    84.98%
+  	>   67572 requests in 30.05s, 16.03MB read
+  	>   Socket errors: connect 39, read 248818, write 18, timeout 0
+  	> Requests/sec:   2248.74
+  	> Transfer/sec:    546.24KB
 
 ### 服务器通信过程分析
 
@@ -102,104 +151,292 @@
 ### Netty 概览
 
 0. Netty 是一个 Java 的网络应用开发框架。
+
 1. 概览
     -   ![image-20211118001035377](imgs/image-20211118001035377.png)
+    
 2. 特点
   1. 异步
   2. 事件驱动
   3. 基于 NIO
+  
 3. 适用于
   1. 服务器
   2. 客户端
   3. TCP/UDP/HTTP
+  
 4. 特性
-  1.　高性能协议服务器
-  	1.　高吞吐
-  	2.　低延迟
-  	3.　低开销
-  	4.　零拷贝
-  	5.　可扩容
-  2.　松耦合：网络和业务逻辑分离
-  3.　使用方便、可维护性好
-5. 应用
+  1. 高性能协议服务器
+
+  	> 高吞吐
+  	> 低延迟
+  	> 低开销
+  	> 零拷贝
+  	> 可扩容
+
+  2. 松耦合：网络和业务逻辑分离
+
+  3. 使用方便、可维护性好
+
+5. 兼容性
+
+    - JDK 兼容性
+
+    	> Netty 3.x: JDK5
+    	>
+    	> Netty 4.x: JDK6
+    	>
+    	> Netty 5.x （已废弃）
+
+    - 协议兼容性
+
+    	> 兼容大部分通用协议
+    	>
+    	> 支持自定义协议
+
+6. 嵌入式应用
   1.　HTTP Server
   2.　HTTPS Server
   3.　WebSocket Server
   4.　TCP Server
   5.　UDP Server
   6.　In VM Pipe
-6. 基本概念
-  1.　Channel
-  2.　ChannelFuture
-  3.　Event & Handler
-  4.　Encoder & Decoder
-  5.　ChannelPipeline
-7. Event & Handler
-  1.　入站事件
-  2.　出站事件
+
+7.  Netty 中的基本概念
+  1. Channel
+
+  	> 通道，Java NIO 中的基础概念。
+
+  2. ChannelFuture
+
+  	> Java 的 Future 接口。
+
+  3. Event & Handler
+
+  	> Netty 基于事件驱动。
+
+  4. Encoder & Decoder
+
+  	> 处理网络 IO 时，需要转换 Java 对象与字节流。（序列化与反序列化）
+
+  5. ChannelPipeline
+
+  	> 事件处理链。
+
+8. Netty 应用组成
+
+    - 网络事件
+    - 应用程序逻辑事件
+    - 事件处理程序
+
+9. Event & Handler
+  1. 入站事件
+
+  	> 通道激活和停用
+  	>
+  	> 读操作事件
+  	>
+  	> 异常事件
+  	>
+  	> 用户事件
+
+  2. 出站事件
+
+  	> 打开连接
+  	>
+  	> 关闭连接
+  	>
+  	> 写入数据
+  	>
+  	> 刷新数据
+
+  3. 事件处理程序接口
+
+  	> ChannelHandler 
+  	>
+  	> ChannelOutboundHandler
+  	>
+  	> ChannelInboundHandler
+
+  4. 适配器（空实现，需要继承使用）
+
+  	> ChannelInboundHandlerAdapter
+  	>
+  	> ChannelOutboundHandlerAdapter
+
+10. demo
+
+    - 压测结果
+
+    	> wangtaodeMac-mini-2:02NIO wangtao$ wrk -c 40 -d 30s http://127.0.0.1:8801
+    	> Running 30s test @ http://127.0.0.1:8801
+    	>   2 threads and 40 connections
+    	>   Thread Stats   Avg      Stdev     Max   +/- Stdev
+    	>     Latency   264.45us    1.09ms  69.08ms   99.59%
+    	>     Req/Sec    81.38k     6.74k   99.15k    87.00%
+    	>   4859333 requests in 30.01s, 500.50MB read
+    	> Requests/sec: 161925.78
+    	> Transfer/sec:     16.68MB
 
 ### Netty 原理
 
-1. 高性能？
+1. 什么是高性能
 
-	1. 高并发用户
-		1. QPS
-		2. 业务指标
-	2. 高吞吐量
-		1. TPS
-		2. 技术指标
-	3. 低延迟
-		1. 技术指标
+  1. 高并发用户
 
-2. 高性能的另一方面
+  	> 业务指标 -- QPS
+  	>
+  	> wrk -c {并发用户数}
+  	>
+  	> Requests/sec: 161925.78 QPS
+  	> Transfer/sec:     16.68MB  TPS
 
-	1. 系统复杂度　×10　以上
-	2. 建设与维护成本　＋＋＋
+  2. 高吞吐量
+    > 技术指标 -- TPS
+
+  3. 低延迟
+
+    > 技术指标
+    >
+    > 使用百分位指标，而非平均指标
+    >
+    >  wrk --latency 打印延迟统计信息
+    >
+    >   Latency Distribution
+    >      50%  227.00us
+    >      75%  232.00us
+    >      90%  238.00us
+    >      99%  446.00us
+
+  4. 容量
+
+2. 高性能的另一方面（副作用）
+
+	1. 系统复杂度 ×10以上
+	2. 建设与维护成本　++++
 	3. 故障或　BUG 导致的破坏性　×10　以上
 
-3. 稳定性建议（混沌工程）
+3. 应对策略：稳定性建议（混沌工程）
 
-	1. 容量/现状 （自省、自知）
+  1. 容量/现状 （自省、自知）
 
-		> 86400s/day 
-		>
-		> 淘宝 TPS 3000W / 86400 ~~ 300/s
-		>
-		> 高并发业务：活动、秒杀
+  	> 86400s/day 
+  	>
+  	> 淘宝 TPS 3000W / 86400 ~~ 300/s
+  	>
+  	> 高并发业务：活动、秒杀
 
-	2. 爆炸半径
+  2. 爆炸半径
 
-	3. 工程方面积累与改进
+  	> 影响范围
+
+  3. 工程方面积累与改进
+
+  	> 积累、分析、改进、标准流程
 
 4. Netty 运行原理
 
+	1. BIO 多线程模型
+
+		- ![image-20211120191347632](imgs/image-20211120191347632.png)
+
+	2. 事件处理机制
+
+		- ![image-20211120191425107](imgs/image-20211120191425107.png)
+
+	3. Reactor 模型
+
+		- ![image-20211120191455427](imgs/image-20211120191455427.png)
+
+		- Service Handler 
+
+			> 会同步的将输入的请求多路复用的分发给相应的 Event Handler。
+			>
+			> 分隔 IO 与 业务
+
+	4. Netty NIO -- 01
+
+		- ![image-20211120192921955](imgs/image-20211120192921955.png)
+		- ![image-20211120193131579](imgs/image-20211120193131579.png)
+
+	5. Netty NIO -- 02
+
+		- ![image-20211120193304692](imgs/image-20211120193304692.png)
+		- ![image-20211120194020325](imgs/image-20211120194020325.png)
+
+	6. Netty NIO -- 03
+
+		- ![image-20211120194115571](imgs/image-20211120194115571.png)
+		- ![image-20211120201829569](imgs/image-20211120201829569.png)
+
+	7. Netty 对三种模式的支持
+
+		- ![image-20211120201916635](imgs/image-20211120201916635.png)
+
+	8. Netty 启动和处理流程
+
+		- ![image-20211120202223971](imgs/image-20211120202223971.png)
+
+	9. Netty 线程模式 -- EventLoop
+
+		- ![image-20211120202358809](imgs/image-20211120202358809.png)
+
+	10. Netty 核心对象 -- EventLoop
+
+		- ![image-20211120202658604](imgs/image-20211120202658604.png)
+
+	11. Netty 运行原理
+
+		- ![image-20211120203502562](imgs/image-20211120203502562.png)
+
 5. 关键对象
 
-	1. Bootstrap
-	2. EventLoopGroup
-	3. EventLoop
-	4. SocketChannel ：连接
-	5. ChannelInitializer
-	6. ChannelPipline
-	7. ChannelHandler
+  0. 流程图
+  	- ![image-20211120204025529](imgs/image-20211120204025529.png)
+
+  1. Bootstrap
+
+  	> 启动线程，开启socket
+
+  2. EventLoopGroup
+
+  3. EventLoop
+
+  4. SocketChannel
+
+  	> 连接
+
+  5. ChannelInitializer
+
+  	> 初始化
+
+  6. ChannelPipline
+
+  	> 处理器链
+
+  7. ChannelHandler
+
+  	> 处理器
 
 6. ChannelPipline
 
-	1. inbound
-	2. outbound
+  1. 流程图
+    - ![image-20211120204226898](imgs/image-20211120204226898.png)
+  2. inbound
+  3. outbound
 
 7. Event & Handler
 
-	1. 入站事件
-		1. 通道激活和停用
-		2. 读操作事件
-		3. 异常事件
-		4. 用户事件
-	2. 出站事件
-		1. 打开连接
-		2. 关闭连接
-		3. 写入数据
-		4. 刷新数据
+  1. 入站事件
+  	1. 通道激活和停用
+  	2. 读操作事件
+  	3. 异常事件
+  	4. 用户事件
+  2. 出站事件
+  	1. 打开连接
+  	2. 关闭连接
+  	3. 写入数据
+  	4. 刷新数据
 
 ### Netty 网络优化
 
