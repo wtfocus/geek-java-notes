@@ -292,8 +292,9 @@
   	> Transfer/sec:     16.68MB  TPS
 
   2. 高吞吐量
+    
     > 技术指标 -- TPS
-
+    
   3. 低延迟
 
     > 技术指标
@@ -438,84 +439,107 @@
   	3. 写入数据
   	4. 刷新数据
 
-### Netty 网络优化
+### Netty 网络程序优化
 
 1. 粘包与拆包（tcp 上层）
 
-	1.　ByteToMessageDecoder 一些常见的实现类
-		1.　FixedLengthFrameDecoder
+  1. 模型图
 
-2.　Nagle　与　TCP_NODELAY
+    - ![image-20211120210118102](imgs/image-20211120210118102.png)
 
-	1.　MTU，最大传输单元，1500 Byte
-	2.　MSS，最大分段大小，1460 Byte
-	3.　Nagle 算法优化
-		1.　优化条件
-			- 缓冲区满
-			- 达到超时
+  2. ByteToMessageDecoder 一些常见的实现类
 
-3.　连接优化
+    - FixedLengthFrameDecoder
 
-	1.　TIME_WAIT 2MSL
-		1.　降低时间
-		2.　端口复用
+    	> 定长协议解码器
 
-4.　Netty 优化
+    - LineBasedFrameDecoder
 
-	1.　不要阻塞　EventLoop
+    	> 行分隔符解码器
 
-	2.　系统参数优化
+    - DelimiterBasedFrameDecoder
 
-		- fd 文件描述符限制
+    	> 分隔符解码器
 
-		- TIME_WAIT 2MSL
+    - LengthFieldBasedFrameDecoder
 
-			> Linux ulimit -a /proc/sys/net/ipv4/tcp_fin_timeout
-			>
-			> Windows TcpTimeWaitDelay
+    	> 长度编码解码器
 
-	3.　缓冲区优化
+    - JsonObjectDecoder
 
-		1.　SO_RCVBUF　接收缓冲
-		2.　SO_SNDBUF　发送缓冲
-		3.　SO_BACKLOG 保持连接状态
-		4.　REUSEXXX
+    	> Json 格式解码器
 
-	4.　心跳周期优化
+2. Nagle 与 TCP_NODELAY
 
-		1.　心跳机制与断线重连
+  1.　MTU，最大传输单元，1500 Byte
+  2.　MSS，最大分段大小，1460 Byte
+  3.　Nagle 算法优化
+  	1.　优化条件
+  		- 缓冲区满
+  		- 达到超时
 
-	5.　内存与　ByteBuffer 优化
+3. 连接优化
 
-		1.　DirectBuffer 与　HeapBuffer
+  1.　TIME_WAIT 2MSL
+  	1.　降低时间
+  	2.　端口复用
 
-	6.　其他优化
+4. Netty 优化
 
-		1.　ioRatio
-		2.　Watermark
-		3.　TrafficShaping
+  1.　不要阻塞　EventLoop
 
-	### API 网关
+  2.　系统参数优化
 
-	1. 职能
-		1. 请求接入，所有 API　接口服务请求的接入点。
-		2. 业务聚合，作为所有后端业务服务的聚合点
-		3. 中介策略，实现安全、验证、路由、过滤、流控等策略
-		4. 统一管理，对所有 API 服务和策略进行统一管理
-	2. 分类
-		1. 流量网关
-			1. 关注稳定与安全
-				1. 流控
-				2. 日志
-				3. 防SQL 注入
-				4. 防 WEb 攻击
-				5. 屏蔽工具
-				6. 黑白 IP 名单
-				7. 证书/加解密处理
-		2. 业务网关
-			1. 提供更好的服务
-				1. 服务级别流控
-				2. 服务降级与熔断
-				3. 路由、LB、灰度
-				4. ……
+  	- fd 文件描述符限制
+
+  	- TIME_WAIT 2MSL
+
+  		> Linux ulimit -a /proc/sys/net/ipv4/tcp_fin_timeout
+  		>
+  		> Windows TcpTimeWaitDelay
+
+  3.　缓冲区优化
+
+  	1.　SO_RCVBUF　接收缓冲
+  	2.　SO_SNDBUF　发送缓冲
+  	3.　SO_BACKLOG 保持连接状态
+  	4.　REUSEXXX
+
+  4.　心跳周期优化
+
+  	1.　心跳机制与断线重连
+
+  5.　内存与　ByteBuffer 优化
+
+  	1.　DirectBuffer 与　HeapBuffer
+
+  6.　其他优化
+
+  	1.　ioRatio
+  	2.　Watermark
+  	3.　TrafficShaping
+
+  ### API 网关
+
+  1. 职能
+  	1. 请求接入，所有 API　接口服务请求的接入点。
+  	2. 业务聚合，作为所有后端业务服务的聚合点
+  	3. 中介策略，实现安全、验证、路由、过滤、流控等策略
+  	4. 统一管理，对所有 API 服务和策略进行统一管理
+  2. 分类
+  	1. 流量网关
+  		1. 关注稳定与安全
+  			1. 流控
+  			2. 日志
+  			3. 防SQL 注入
+  			4. 防 WEb 攻击
+  			5. 屏蔽工具
+  			6. 黑白 IP 名单
+  			7. 证书/加解密处理
+  	2. 业务网关
+  		1. 提供更好的服务
+  			1. 服务级别流控
+  			2. 服务降级与熔断
+  			3. 路由、LB、灰度
+  			4. ……
 
