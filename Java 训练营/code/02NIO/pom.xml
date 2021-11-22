@@ -33,5 +33,19 @@
       <version>4.1.51.Final</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.13</version>
+    </dependency>
+
+    <!--okhttp依赖-->
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.0.0</version>
+    </dependency>
+
   </dependencies>
 </project>
