@@ -471,75 +471,155 @@
 
 2. Nagle 与 TCP_NODELAY
 
-  1.　MTU，最大传输单元，1500 Byte
-  2.　MSS，最大分段大小，1460 Byte
-  3.　Nagle 算法优化
-  	1.　优化条件
-  		- 缓冲区满
-  		- 达到超时
+  1. MTU
+
+  	> 最大传输单元
+  	>
+  	> 默认 1500 Byte
+
+  2. MSS
+
+    > 最大分段大小
+    >
+    > 默认 1460 Byte
+    >
+    > MSS = MTU - 20(IP) - 20(TCP)
+
+  3. Nagle 算法优化
+
+    > 缓冲区满
+    > 达到超时  
+
+  4. 禁用 Nagle 算法
+
+    > 打开 TCP_NODELAY 参数
 
 3. 连接优化
 
-  1.　TIME_WAIT 2MSL
-  	1.　降低时间
-  	2.　端口复用
+  - TCP 三次握手
+  	- ![image-20211122202317856](imgs/image-20211122202317856.png)
+  	
+  - TCP 四次握手
+  	- ![image-20211122202328514](imgs/image-20211122202328514.png)
+
+  - TIME_WAIT = 2*MSL
+
+    > Linux 默认1个 MSL 是 1 分钟
+    >
+    > WIN 默认1个 MSL 是 2 分钟
 
 4. Netty 优化
 
-  1.　不要阻塞　EventLoop
+  1.　不要阻塞 EventLoop
 
-  2.　系统参数优化
+  2. 系统参数优化
 
-  	- fd 文件描述符限制
+    - fd 文件描述符限制
 
-  	- TIME_WAIT 2MSL
+    	> 查看
+    	>
+    	> unlimit -a 
 
-  		> Linux ulimit -a /proc/sys/net/ipv4/tcp_fin_timeout
-  		>
-  		> Windows TcpTimeWaitDelay
+    - TIME_WAIT 2MSL
 
-  3.　缓冲区优化
+    	> Linux
+    	>
+    	> ulimit -a /proc/sys/net/ipv4/tcp_fin_timeout
+    	>
+    	> 
+    	>
+    	> Windows 注册表
+    	>
+    	> TcpTimeWaitDelay
 
-  	1.　SO_RCVBUF　接收缓冲
-  	2.　SO_SNDBUF　发送缓冲
-  	3.　SO_BACKLOG 保持连接状态
-  	4.　REUSEXXX
+  3. 缓冲区优化
 
-  4.　心跳周期优化
+    > SO_RCVBUF　接收缓冲
+    >
+    > SO_SNDBUF　发送缓冲
+    >
+    > SO_BACKLOG 
+    > 保持连接状态（中间状态），能保持多少个连接
+    >
+    > REUSE XXX 
+    >
+    > 复用 XX
 
-  	1.　心跳机制与断线重连
+  4. 心跳周期优化
 
-  5.　内存与　ByteBuffer 优化
+  	> 心跳机制
+  	> 断线重连
 
-  	1.　DirectBuffer 与　HeapBuffer
+  5. 内存与 ByteBuffer 优化
 
-  6.　其他优化
+  	> DirectBuffer 
+  	> HeapBuffer
 
-  	1.　ioRatio
-  	2.　Watermark
-  	3.　TrafficShaping
+  6. 其他优化
 
-  ### API 网关
+  	> ioRatio，当前CPU 处理 IO所的资源 / CPU 处理业务所用资源，默认 `50:50`
+  	> Watermark，高水位/低水位
+  	> TrafficShaping，流控
 
-  1. 职能
-  	1. 请求接入，所有 API　接口服务请求的接入点。
-  	2. 业务聚合，作为所有后端业务服务的聚合点
-  	3. 中介策略，实现安全、验证、路由、过滤、流控等策略
-  	4. 统一管理，对所有 API 服务和策略进行统一管理
-  2. 分类
-  	1. 流量网关
-  		1. 关注稳定与安全
-  			1. 流控
-  			2. 日志
-  			3. 防SQL 注入
-  			4. 防 WEb 攻击
-  			5. 屏蔽工具
-  			6. 黑白 IP 名单
-  			7. 证书/加解密处理
-  	2. 业务网关
-  		1. 提供更好的服务
-  			1. 服务级别流控
-  			2. 服务降级与熔断
-  			3. 路由、LB、灰度
-  			4. ……
+  ### 典型应用 API 网关
+
+  1. 结构和功能
+
+    - ![image-20211122205130212](imgs/image-20211122205130212.png)
+
+  2. 四大职能
+
+    - 请求接入
+
+    	> 所有 API　接口服务请求的接入点。
+
+    - 业务聚合
+
+    	> 作为所有后端业务服务的聚合点
+
+    - 中介策略
+
+    	> 实现安全、验证、路由、过滤、流控等策略
+
+    - 统一管理
+
+    	> 对所有 API 服务和策略进行统一管理
+
+  3. 分类
+    - 流量网关
+    	1. 关注稳定与安全
+    		> 全局性流控
+    		> 
+    		> 日志统计
+    		> 
+    		> 防 SQL 注入
+    		> 
+    		> 防 WEb 攻击
+    		> 
+    		> 屏蔽工具
+    		> 
+    		> 黑白 IP 名单
+    		> 
+    		> 证书/加解密处理
+    		> 
+    - 业务网关
+    	1. 提供更好的服务
+    		> 服务级别流控
+    		> 服务降级与熔断
+    		> 路由、LB、灰度
+    		> ...
+    
+  4. 常见的 API 网关的实现
+
+  	1. Zuul，BIO
+  		- ![image-20211122210350847](imgs/image-20211122210350847.png)
+  	2. Zuul2，NIO(Netty)，扩展性好，适合业务网关，二次开发
+  		- ![image-20211122210422595](imgs/image-20211122210422595.png)
+  	3. Spring Cloud Gateway，推荐（Netty），扩展性好，适合业务网关，二次开发
+  		- ![image-20211122210556998](imgs/image-20211122210556998.png)
+  	4. OpenResty -->> Kong 性能非常好，适合流量网关
+
+  	### 自己实现 API 网关
+
+  	
 
