@@ -4,6 +4,8 @@
 
 ### 1.（必做）整合你上次作业的 httpclient/okhttp
 
+- [gateway01](https://github.com/wtfocus/geek-java-notes/tree/master/Java%20%E8%AE%AD%E7%BB%83%E8%90%A5/code/02NIO/nio02)
+
 ### 2.（选做）使用 Netty 实现后端 HTTP 访问（代替上一步骤）
 
 ### 3.（必做）实现过滤器
