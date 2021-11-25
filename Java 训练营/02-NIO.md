@@ -611,15 +611,17 @@
     
   4. 常见的 API 网关的实现
 
-  	1. Zuul，BIO
-  		- ![image-20211122210350847](imgs/image-20211122210350847.png)
-  	2. Zuul2，NIO(Netty)，扩展性好，适合业务网关，二次开发
-  		- ![image-20211122210422595](imgs/image-20211122210422595.png)
-  	3. Spring Cloud Gateway，推荐（Netty），扩展性好，适合业务网关，二次开发
-  		- ![image-20211122210556998](imgs/image-20211122210556998.png)
-  	4. OpenResty -->> Kong 性能非常好，适合流量网关
+      1. Zuul，BIO
+          - ![image-20211122210350847](imgs/image-20211122210350847.png)
+      2. Zuul2，NIO(Netty)，扩展性好，适合业务网关，二次开发
+          - ![image-20211122210422595](imgs/image-20211122210422595.png)
+      3. Spring Cloud Gateway，推荐（Netty），扩展性好，适合业务网关，二次开发
+          - ![image-20211122210556998](imgs/image-20211122210556998.png)
+      4. OpenResty -->> Kong 性能非常好，适合流量网关
 
-  	### 自己实现 API 网关
+### 自己实现 API 网关
 
-  	
+1.   网关代理
+2.   过滤器
+3.   路由分流
 
