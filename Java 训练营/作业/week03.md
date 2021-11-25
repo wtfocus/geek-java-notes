@@ -15,3 +15,7 @@
 ### 5.（选做）跑一跑课上的各个例子，加深对多线程的理解
 
 ### 6.（选做）完善网关的例子，试着调整其中的线程池参数
+
+### 参考
+
+- <https://gitee.com/alicestack/pro-java/tree/master/03-NIO/gateway-server/src/main/java/com/ky/pro/java/nio/http/server/filter/impl>
