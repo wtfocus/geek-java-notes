@@ -230,7 +230,135 @@
 
 ### Spring Boot Starter
 
-### JDBC / 数据库连接池 / ORM-Hibernate / MyBatis
+1.   starter 所需要配置文件
+     -   spring.provides 
+     -   spring.factories 
+     -   additional-xxxx-metadata 
+     -   自定义 Configuration 类
+2.   示例
+     -   `shardingsphere -> shardingsphere-jdbc-core-spring-boot-starter`
+
+### JDBC / 数据库连接池
+
+1.   JDBC 定义了数据库交互接口：
+     -   DriverManager
+     -   Connection
+     -   Statement
+     -   ResultSet 
+     -   DataSource--Pool
+2.   JDBC - Java 操作数据库的核心
+     -   Java 操作数据库的各种类库，都可以看做是在 JDBC 上做的增强实现
+3.   数据库连接池
+     -   C3P0
+     -   DBCP--Apache CommonPool 
+     -   Druid
+     -   Hikari（推荐）
+
+### ORM -- Hibernate / MyBatis
+
+0.   ORM 
+     -   实现 Java Obj -> SQL 的转换
+
+1.   Hibernate
+     -    国际使用最多
+
+2.   MyBatis
+     -   国内使用最多
+
+     -   半自动化的 ORM
+
+         >   映射文件　mapper.xml　定义 map 规则和 SQL
+         >
+         >   定义　mapper/DAO ，基于 xml 规则，操作数据库
+
+3.   Hibernate vs MyBatis
+
+     -   Mybatis 优点: 原生SQL(XML 语法)，直观，对 DBA 友好
+
+         >   对 DBA友好
+         >
+         >   对性能调优友好
+         >
+         >   对 SQL 审计友好
+
+     -   Hibernate 优点: 简单场景不用写 SQL(HQL、Cretiria、SQL)
+
+     -   Mybatis 缺点: 繁琐，可以用 MyBatis-generator、MyBatis-Plus 之类的插件
+
+     -   Hibernate 缺点: 对DBA 不友好
 
 ### Spring / Spring Boot 集成 ORM / JPA
+
+1.   JPA
+
+     -   全称 Java Persistence API
+
+         >   即 Java 持久化 API，是一套基于 ORM 的规范，内部是由一系列的接口和抽象类构成。
+
+     -   核心 EntityManager
+
+2.   Spring JDBC vs ORM
+
+     -   ![image-20211206205554426](imgs/image-20211206205554426.png)
+
+3.   Spring 管理事务
+
+     -   JDBC 
+
+         >   编程式事务管理
+
+     -   Spring 
+
+         >   声明式事务管理:事务管理器+AOP
+
+     -   Spring 声明式事务配置参考
+
+         >   事务的传播性:
+         >
+         >   @Transactional(propagation=Propagation.REQUIRED)
+         >
+         >   
+         >
+         >   事务的隔离级别:
+         >
+         >   @Transactional(isolation = Isolation.READ_UNCOMMITTED) 
+         >
+         >   读取未提交数据(会出现脏读，不可重复读) 基本不使用
+         >
+         >   
+         >
+         >   只读:
+         >
+         >   @Transactional(readOnly=true)
+         >   该属性用于设置当前事务是否为只读事务，设置为 true 表示只读，false 则表示可读写，默认值为 false。 
+         >
+         >   
+         >
+         >   事务的超时性:
+         >
+         >   @Transactional(timeout=30)
+         >
+         >   
+         >
+         >   回滚:
+         >
+         >   指定单一异常类:@Transactional(rollbackFor=RuntimeException.class) 
+         >
+         >   指定多个异常类:@Transactional(rollbackFor={RuntimeException.class, Exception.class})
+     
+4.   示例
+
+     -   `shardingsphere -> examples`
+     -   Spring 集成 MyBatis
+     -   Spring 集成 Hibernate/JPA
+     -   Spring Boot 集成 JPA/Hibernate
+     -   Spring Boot 集成 MyBatis
+
+5.   Spring/Spring Boot 使用 ORM 的经验
+
+     -   本地事务(事务的设计与坑) 
+     -   多数据源(配置、静态制定、动态切换) 
+     -   数据库连接池池配置(大小、重连、超时) 
+     -   ORM 内的复杂 SQL，级联查询
+     -   ORM 辅助工具和插件
 
