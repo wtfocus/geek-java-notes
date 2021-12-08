@@ -364,7 +364,7 @@
 
 ### Java8 Lambda*
 
-1.    Lambda 表达式
+1.   Lambda 表达式
 
      -   是一个匿名函数，即没有函数名的函数。
      -   从动态引用到动态定义，简化 Java 函数写法
@@ -406,7 +406,7 @@
      >
      >   `(String s) -> System.out.print(s)`
      
-3.    深入 Java8 函数式
+3.   深入 Java8 函数式
 
      -   @FunctionalInterface
      -   Predicate<T> 有参数、条件判断 
