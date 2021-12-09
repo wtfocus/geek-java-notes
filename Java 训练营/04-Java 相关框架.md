@@ -631,69 +631,69 @@
 
 1.   GoF 23　设计模式
 
-    -   创建型
+    　-   创建型
 
-        >   Factory Method(工厂方法) 
-        >
-        >   Abstract Factory(抽象工厂) 
-        >
-        >   Builder(建造者)
-        >
-        >   Prototype(原型)
-        >
-        >   Singleton(单例)
+          >   Factory Method(工厂方法) 
+          >
+          >   Abstract Factory(抽象工厂) 
+          >
+          >   Builder(建造者)
+          >
+          >   Prototype(原型)
+          >
+          >   Singleton(单例)
 
-    -   结构型
+     -   结构型
 
-        >   Adapter(适配器) 
-        >
-        >   Bridge(桥接)
-        >
-        >   Composite(组合) 
-        >
-        >   Decorator(装饰) 
-        >
-        >   Facade(外观) 
-        >
-        >   Flyweight(享元) 
-        >
-        >   Proxy(代理)
+          >   Adapter(适配器) 
+          >
+          >   Bridge(桥接)
+          >
+          >   Composite(组合) 
+          >
+          >   Decorator(装饰) 
+          >
+          >   Facade(外观) 
+          >
+          >   Flyweight(享元) 
+          >
+          >   Proxy(代理)
 
-    -   行为型
+     -   行为型
 
-        >   Interpreter(解释器)
-        >
-        >   Template Method(模板方法) 
-        >
-        >   Chain of Responsibility(责任链) 
-        >
-        >   Command(命令)
-        >
-        >   Iterator(迭代器)
-        >
-        >   Mediator(中介者)
-        >
-        >   Memento(备忘录)
-        >
-        >   Observer(观察者)
-        >
-        >   State(状态)
-        >
-        >   Strategy(策略)
-        >
-        >   Visitor(访问者)
+          >   Interpreter(解释器)
+          >
+          >   Template Method(模板方法) 
+          >
+          >   Chain of Responsibility(责任链) 
+          >
+          >   Command(命令)
+          >
+          >   Iterator(迭代器)
+          >
+          >   Mediator(中介者)
+          >
+          >   Memento(备忘录)
+          >
+          >   Observer(观察者)
+          >
+          >   State(状态)
+          >
+          >   Strategy(策略)
+          >
+          >   Visitor(访问者)
     
 2.   模式的 3 个层次
 
-    -   解决方案层面(架构模式)，组件层面(框架模式)，代码层面(GoF 设计模式)
+     -   解决方案层面(架构模式)，组件层面(框架模式)，代码层面(GoF 设计模式)
 
 3.   其他模式
 
-    -   集成模式，事务模式，IO 模式/Context 模式，甚至状态机 FSM，规则引擎 RE，workflow 都是模式。
+     -   集成模式，事务模式，IO 模式/Context 模式，甚至状态机 FSM，规则引擎 RE，workflow 都是模式。
 
 4.   反模式
 
-    -   死用模式，都是反模式。
+     -   死用模式，都是反模式。
 
 ### 单元测试*
 
