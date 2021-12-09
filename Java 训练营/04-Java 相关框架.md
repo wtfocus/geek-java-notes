@@ -514,13 +514,198 @@
 
 ### Lombok
 
+1.   定义
+
+     >   利用注解自动生成 java Bean 中烦 人的 get、set 方法及有参无参构造函数，还能自动生成 logger、ToString、HashCode、 Builder 等 java 特色的函数或是符合设计模式的方法，能够让你 java Bean 更简洁，更美观。
+     >
+     >   基于字节码增强，编译期处理。 
+     >
+     >   可以配置开发工具 IDE 或 Mave 能使用。
+     >
+     >   简化编程
+
+2.   使用
+
+     >   @Setter 
+     >
+     >   @Getter 
+     >
+     >   @Data 
+     >
+     >   @XXXConstructor 
+     >
+     >   @Builder 
+     >
+     >   @ToString
+     >
+     >   @Slf4j
+     
+3.   示例
+
 ### Guava
+
+1.   定义
+
+     >   Guava 是一种基于开源的 Java 库，其中包含谷歌正在由他们很多项目使用的很多核心库。
+     >
+     >   这个库 是为了方便编码，并减少编码错误。
+     >
+     >   这个库提供用于集合，缓存，支持原语，并发性，常见注解， 字符串处理，I/O 和验证的实用方法。
+
+2.   优势
+
+     >   标准化　－－　Guava 库是由谷歌托管。
+     >
+     >   高效－可靠　－－　快速和有效的扩展 JAVA 标准库。
+     >
+     >   优化　－－　Guava 库经过高度的优化。
+
+3.   JDK8 里的一些新特性源于 Guava
+
+4.   使用
+
+     -   集合[Collections]
+          1.   不可变集合
+
+               >   用不变的集合进行防御性编程和性能提升。
+
+          2.   新集合类型
+
+               >   multisets, multimaps, tables, bidirectional maps 等
+
+          3.   强大的集合工具类
+
+               >   提供 java.util.Collections 中没有的集合工具
+
+          4.   扩展工具类
+
+               >   让实现和扩展集合类变得更容易，比如创建 Collection 的装饰器，或实现迭代器
+
+     -   缓存
+
+          >   本地缓存实现，支持多种缓存过期策略
+
+     -   并发
+
+          >   ListenableFuture: 完成后触发回调的 Future
+
+     -   字符串处理
+
+          >   非常有用的字符串工具，包括分割、连接、填充等操作
+
+     -   事件总线
+
+          >   发布-订阅模式的组件通信，进程内模块间解耦
+
+     -   反射
+
+          >   Guava 的 Java 反射机制工具类
+
+5.   示例
 
 ### 设计原则*
 
+1.   面向对象设计原则　SOLID
+     -   SRP: The Single Responsibility Principle 	**单一责任原则**
+     -   OCP: The Open Closed Principle 				**开放封闭原则**
+     -   LSP: The Liskov Substitution Principle 		**里氏替换原则**
+     -   ISP: The Interface Segregation Principle 	**接口分离原则**
+     -   DIP: The Dependency Inversion Principle 		**依赖倒置原则**
+     
+2.   KISS 原则
+
+3.   目标：高内聚，松耦合
+
+4.   编码规范、codeStyle
+
+     -   Google 编码规范: https://google.github.io/styleguide/javaguide.html 
+     -   Alibaba 编码规范: https://github.com/alibaba/p3c
+     -   VIP 规范: https://vipshop.github.io/vjtools/#/standard/
+
+5.   其他规范（成为正规军的前提）
+
+     -   架构设计规范，技术调研规范，数据库规范等等。
+
+
 ### 设计模式*
 
+1.   GoF 23　设计模式
+
+    -   创建型
+
+        >   Factory Method(工厂方法) 
+        >
+        >   Abstract Factory(抽象工厂) 
+        >
+        >   Builder(建造者)
+        >
+        >   Prototype(原型)
+        >
+        >   Singleton(单例)
+
+    -   结构型
+
+        >   Adapter(适配器) 
+        >
+        >   Bridge(桥接)
+        >
+        >   Composite(组合) 
+        >
+        >   Decorator(装饰) 
+        >
+        >   Facade(外观) 
+        >
+        >   Flyweight(享元) 
+        >
+        >   Proxy(代理)
+
+    -   行为型
+
+        >   Interpreter(解释器)
+        >
+        >   Template Method(模板方法) 
+        >
+        >   Chain of Responsibility(责任链) 
+        >
+        >   Command(命令)
+        >
+        >   Iterator(迭代器)
+        >
+        >   Mediator(中介者)
+        >
+        >   Memento(备忘录)
+        >
+        >   Observer(观察者)
+        >
+        >   State(状态)
+        >
+        >   Strategy(策略)
+        >
+        >   Visitor(访问者)
+    
+2.   模式的 3 个层次
+
+    -   解决方案层面(架构模式)，组件层面(框架模式)，代码层面(GoF 设计模式)
+
+3.   其他模式
+
+    -   集成模式，事务模式，IO 模式/Context 模式，甚至状态机 FSM，规则引擎 RE，workflow 都是模式。
+
+4.   反模式
+
+    -   死用模式，都是反模式。
+
 ### 单元测试*
+
+1.   发现缺陷越提前，修复成本越小
+
+2.   如何做
+
+     >   JUnit -> TestCase, TestSuite, Runner
+     >
+     >   SpringTest
+     >
+     >   Mock
 
 
 
