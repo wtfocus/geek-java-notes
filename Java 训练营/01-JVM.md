@@ -251,38 +251,40 @@
 	> kill -3 同样效果
 
 5. jcmd，执行 JVM 相关分析命令（整合）
-
-  > (env) wangtaodeMac-mini:code wangtao$ jcmd 91739 help
-  > 91739:
-  > The following commands are available:
-  > JFR.stop
-  > JFR.start
-  > JFR.dump
-  > JFR.check
-  > VM.native_memory
-  > VM.check_commercial_features
-  > VM.unlock_commercial_features
-  > ManagementAgent.stop
-  > ManagementAgent.start_local
-  > ManagementAgent.start
-  > VM.classloader_stats
-  > GC.rotate_log
-  > Thread.print
-  > GC.class_stats
-  > GC.class_histogram
-  > GC.heap_dump
-  > GC.finalizer_info
-  > GC.heap_info
-  > GC.run_finalization
-  > GC.run
-  > VM.uptime
-  > VM.dynlibs
-  > VM.flags
-  > VM.system_properties
-  > VM.command_line
-  > VM.version
-  > help
-
+	
+	-   ```bash
+	    (env) wangtaodeMac-mini:code wangtao$ jcmd 91739 help
+	    91739:
+	    The following commands are available:
+	    JFR.stop
+	    JFR.start
+	    JFR.dump
+	    JFR.check
+	    VM.native_memory
+	    VM.check_commercial_features
+	    VM.unlock_commercial_features
+	    ManagementAgent.stop
+	    ManagementAgent.start_local
+	    ManagementAgent.start
+	    VM.classloader_stats
+	    GC.rotate_log
+	    Thread.print
+	    GC.class_stats
+	    GC.class_histogram
+	    GC.heap_dump
+	    GC.finalizer_info
+	    GC.heap_info
+	    GC.run_finalization
+	    GC.run
+	    VM.uptime
+	    VM.dynlibs
+	    VM.flags
+	    VM.system_properties
+	    VM.command_line
+	    VM.version
+	    help
+	    ```
+	
 6. jrunscript/jjs，运行 js 命令
 
 ###  JDK 相关图形化工具
@@ -492,13 +494,13 @@
 
 4. 为达“目标”，所采用的方法
 
-  1. 不对老年代进行整理，而使用空闲列表（free-lists）来管理内存空间的回收。
+  -   不对老年代进行整理，而使用空闲列表（free-lists）来管理内存空间的回收。
 
-  2. 在 mark-and-sweep （标记－清除）阶段的大部分工作和应用线程一起并发执行。
+  -   在 mark-and-sweep （标记－清除）阶段的大部分工作和应用线程一起并发执行。
 
-  	> 它会和业务线程争抢 CPU资源。
-  	>
-  	> 默认 CMS 使用 CPU 核心数的 1/4.
+      >   它会和业务线程争抢 CPU资源。
+      >
+      >   默认 CMS 使用 CPU 核心数的 1/4.
 
 5. 思考：
 
