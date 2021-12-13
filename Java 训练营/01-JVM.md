@@ -419,7 +419,63 @@
     -   整理算法，标记－清除－整理算法（Mark-Sweep-Compact）
         -   ![image-20211211113912295](imgs/image-20211211113912295.png)
 
-## 串行 GC / 并行 GC
+## 串行 GC
+
+1.   配置参数
+
+     >   -XX:+UseSerialGC
+
+2.   算法
+
+     >   串行 GC 对年轻代使用 mark-copy(标记-复制) 算法
+     >
+     >   对老年代使用 mark-sweep-compact(标记-清除- 整理)算法。
+
+3.   STW
+
+     >   年轻代&老年代都会触发全线暂停(STW)
+
+4.   特点
+
+     >   CPU 利用率高，暂停时间长。简单粗暴
+
+5.   改进
+
+     >   -XX:+USeParNewGC 改进版本的 Serial GC，可以配合 CMS 使用。
+
+### 并行 GC
+
+1.   配置参数
+
+     >   -XX:+UseParallelGC 
+     >
+     >   -XX:+UseParallelOldGC 
+     >
+     >   -XX:+UseParallelGC -XX:+UseParallelOldGC
+
+2.   STW
+
+     >   年轻代和老年代的垃圾回收都会触发 STW 事件。
+
+3.   算法
+
+     >   在年轻代使用 标记-复制(mark-copy)算法
+     >
+     >   在老年代使用 标记-清除-整理(mark-sweep-compact)算法。
+
+4.   GC 线程数
+
+     >   默认值为 CPU 的核心数
+     >
+     >   指定 GC 线程数，-XX:ParallelGCThreads=N
+
+5.   特点
+
+     >   在 GC 期间，所有 CPU 内核都在并行清理垃圾，所以总暂停时间更短;
+     >
+     >   在两次 GC 周期的间隔期，没有 GC 线程在运行，不会消耗任何系统资源。
+
+6.   JDK 6/7/8 默认使用并行 GC 
 
 ## CMS GC / G1 GC
 
