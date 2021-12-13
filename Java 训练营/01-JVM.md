@@ -135,9 +135,7 @@
 
 	- 系统属性参数
 
-		- 
-
-			```bash
+		- ```bash
 			# 命令行设置
 			-Dfile.coding=UTF-8
 			-Duser.timezone=GMT+08
@@ -148,7 +146,7 @@
 			System.setProperty("a", "100");
 			String a = System.getProperty("a");
 			```
-
+		
 	- 运行模式参数
 
 		- -server，启动速度慢，运行时性能和内存管理效率很高。
@@ -156,7 +154,7 @@
 		- -Xint，解释模式
 		- -Xcomp，编译模式
 		- -Xmixed，混合模式（JVM 默认模式）
-
+	
 	- 堆内存设置参数
 
 		- -Xmx，最大堆内存， 
@@ -164,7 +162,7 @@
 			> 部署 Java 应用要资源隔离，防止多个 Java 应用抢资源。
 			>
 			> xmx <= 物理内存的70%（60～80）
-
+	
 		- -Xms，初始化大小
 
 			> 建议配置大小和-Xmx 大小一致，降低 Full GC 抖动。
