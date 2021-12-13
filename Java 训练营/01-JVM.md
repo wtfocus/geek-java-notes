@@ -508,6 +508,13 @@
 
 6. 六个阶段
 
+    1. Initial Mark 初始标记
+    2. concurrent-mark 并发标记
+    3. concurrent-preclean 并发预清理
+    4. Final Remark 最终标记
+    5. concurrent-sweep 并发清理
+    6. concurrent-reset 并发重置
+
 7. 特点
 
     -   优点
