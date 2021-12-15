@@ -958,37 +958,45 @@
 
   -  OutOfMemoryError: Java heap space 
 
-  	>原因
-  >
-  	>创建新的对象时，堆内存中的空间不足以存放新创建的对象。
-  	>
-    >解决方案
-  >
-  	>增加堆内存大小，
+    -  原因
+
+      >
+      >创建新的对象时，堆内存中的空间不足以存放新创建的对象。
+
+    -  解决方案
+      
+      >增加堆内存大小，
 
   -  OutOfMemoryError: PermGen space/ OutOfMemoryError: Metaspace 
 
-  	> 加载到内存中的类数理太多或体积太大
-  	>
-  	> 增大　PermGen/Metaspace
-  	>
-  	> -XX:MaxPermSize
-  	>
-  	> -XX:MaxMetaspaceSize
-  	>
-  	> 
-  	>
-  	> 高版本 JVM 也可以（不一定好用）
-  	>
-  	> -XX:+CMSClassUnloadingEnabled
+    -  原因
+
+      > 加载到内存中的类数理太多或体积太大
+      
+    -  解决方案
+
+      > 增大 PermGen/Metaspace
+      >
+      > -XX:MaxPermSize
+      >
+      > -XX:MaxMetaspaceSize
+      >
+      >
+      > 高版本 JVM 也可以（不一定好用）
+      >
+      > -XX:+CMSClassUnloadingEnabled
 
   -  OutOfMemoryError: Unable to create new native thread
 
-  	> 程序创建的线程数量已经达到上限值。
-  	>
-  	> 1. 调用系统参数 ulimit -a, echo 120000 > /proc/sys/kernel/threads-max
-  	> 2. 降低 Xss 参数
-  	> 3. 调整代码，改变线程创建和使用方式。
+    -  原因
+
+      >   程序创建的线程数量已经达到上限值。
+
+    -  解决方案
+
+        >   1. 调用系统参数 ulimit -a, echo 120000 > /proc/sys/kernel/threads-max
+        >   2. 降低 Xss 参数
+        >   3. 调整代码，改变线程创建和使用方式。
 
 9. 内存 Dump 分析工具
 
