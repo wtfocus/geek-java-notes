@@ -558,10 +558,12 @@
 
         >   环境，Mac Java11
         >
-        >   sudo jhsdb jmap --heap --pid {PID}
+        >   jhsdb jmap --heap --pid {PID}
+        >
+        >   jhsdb jmap --heap --pid  6328
 
     -   最大 Young 区大小 -- JDK8
-
+    
         >   ParallelGC:1024M/3 = 341.3 M 
         >   CMS:64M * GC线程数4 * 13 / 10 = 332.8M
 
